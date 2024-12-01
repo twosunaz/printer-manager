@@ -1,0 +1,22 @@
+{
+  "name": "printer-manager",
+  "version": "1.0.0",
+  "description": "Local proxy printer manager for EC2 server",
+  "main": "main.js",
+  "type": "module",
+  "scripts": {
+    "start": "electron .",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.20.3",
+    "electron": "^33.2.1",
+    "express": "^4.21.1",
+    "pdf-to-printer": "^5.6.0",
+    "pdfkit": "^0.15.1",
+    "ws": "^8.18.0"
+  }
+}

@@ -1,0 +1,85 @@
+<body>
+    <h1>Printer Manager</h1>
+  
+    <!-- Printer Selection -->
+    <label for="printer-select">Select a Printer:</label>
+    <select id="printer-select">
+      <option value="" disabled selected>Select a printer...</option>
+    </select>
+  
+    <!-- Location Input -->
+    <label for="location-input">Enter Location:</label>
+    <input type="text" id="location-input" placeholder="e.g., Tucson, AZ" />
+  
+    <!-- Region Dropdown -->
+    <label for="region-select">Select Region:</label>
+    <select id="region-select">
+      <option value="" disabled selected>Select a region...</option>
+      <option value="United States">United States</option>
+      <option value="Canada">Canada</option>
+      <option value="Europe">Europe</option>
+      <option value="Asia">Asia</option>
+    </select>
+  
+    <!-- Register Button -->
+    <button id="register-button">Register Printer</button>
+  
+    <!-- Go Live Button -->
+    <button id="go-live-button">Go Live</button>
+  
+    <!-- Output Terminal -->
+    <div id="output-terminal"></div>
+  
+    <script>
+      window.electron.onPrintersList((printers) => {
+        const printerSelect = document.getElementById('printer-select');
+        printers.forEach((printer) => {
+          const option = document.createElement('option');
+          option.value = printer.deviceId;
+          option.textContent = printer.name;
+          printerSelect.appendChild(option);
+        });
+      });
+  
+      // Register printer when the button is clicked
+      document.getElementById('register-button').addEventListener('click', () => {
+        const printerSelect = document.getElementById('printer-select');
+        const locationInput = document.getElementById('location-input');
+        const regionSelect = document.getElementById('region-select');
+  
+        const printerId = printerSelect.value;
+        const location = locationInput.value.trim();
+        const region = regionSelect.value;
+  
+        if (!printerId || !location || !region) {
+          alert('Please fill out all fields before registering the printer.');
+          return;
+        }
+  
+        window.electron.registerPrinter({ printerId, location, region });
+      });
+  
+      // Go live with the printer when the button is clicked
+      document.getElementById('go-live-button').addEventListener('click', () => {
+        const printerSelect = document.getElementById('printer-select');
+        const printerId = printerSelect.value;
+  
+        if (!printerId) {
+          alert('Please select a printer to go live.');
+          return;
+        }
+  
+        window.electron.goLive({ printerId });
+      });
+  
+      // Display server responses in the terminal
+      window.electron.onServerResponse((response) => {
+        const terminal = document.getElementById('output-terminal');
+        const message = document.createElement('div');
+        message.textContent = response;
+        terminal.appendChild(message);
+        terminal.scrollTop = terminal.scrollHeight; // Auto-scroll to the latest message
+      });
+    </script>
+  </body>
+  
